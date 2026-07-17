@@ -1,4 +1,4 @@
-# BugBîner AI — Gen AI-Powered Vulnerability Scanner
+# BugBîner AI — Gen AI-Powered Vulnerability Scanner v1
 
 <p align="center">
   <b>ماسح ثغرات أمنية مدعوم بالذكاء الاصطناعي التوليدي</b><br>
@@ -10,6 +10,7 @@
 ## نبذة عن البرنامج
 
 **BugBîner AI** هو ماسح ثغرات أمنية عصري يدمج بين تقنيات الفحص  والذكاء الاصطناعي التوليدي المحلي. يكتشف البرنامج أكثر من **60 نوعاً** من الثغرات الأمنية تلقائياً ويقدم تحليل ذكي لكل ثغرة مع تقييم مدى استغلالها.
+ومازال قيد تطوير 
 
 ### روابط مفيدة
 - فيديو شرح: https://www.youtube.com/watch?v=exnomF4Ccn4
@@ -28,7 +29,7 @@
 | **تقارير HTML احترافية** | تقارير مفصلة تشبه Burp Suite مع تصنيف حسب الخطورة |
 | **استئناف الفحص (Resume)** | إمكانية إيقاف مؤقت واستئناف الفحص من حيث توقف |
 | **واجهة عصرية** | واجهة سوداء بأسلوب Cyberpunk مع لوحة متابعة حية |
-| **ذكاء اصطناعي محلي بالكامل** | يعمل بدون إنترنت عبر Ollama — بياناتك تبقى على جهازك |
+| **ذكاء اصطناعي محلي بالكامل** يعمل بدون انترنت مجاني بالكامل
 
 ---
 
@@ -181,5 +182,5 @@ http://localhost:9090
 
 <p align="center">
   <b>BugBiner AI</b> — Vulnerability Scanner Powered by Generative AI<br>
-  <sub>Built with FastAPI, Node.js, Puppeteer, Playwright, Ollama & Qwen2.5</sub>
+  <sub>Built with FastAPI, Node.js, Puppeteer, Playwright</sub>
 </p>
