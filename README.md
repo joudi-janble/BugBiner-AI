@@ -110,21 +110,6 @@ start.bat
 6. يفتح المتصفح تلقائياً
 ```
 
-### التشغيل اليدوي
-
-```bash
-# تثبيت المكتبات
-python -m venv .venv
-.venv\Scripts\pip install -r requirements.txt
-
-# تثبيت زاحف Node.js
-cd backend && npm install && cd ..
-
-# تشغيل الخادوم
-cd backend
-..\..venv\Scripts\python main.py
-```
-
 ### فتح الواجهة
 
 ```
