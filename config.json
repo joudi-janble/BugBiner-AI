@@ -1,0 +1,6 @@
+{
+  "ollama_enabled": true,
+  "ollama_base": "http://localhost:11434",
+  "ollama_model": "qwen2.5:7b",
+  "vision_model": ""
+}

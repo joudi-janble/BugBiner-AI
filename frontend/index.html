@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BugBîner AI — Gen AI-Powered Vulnerability Scanner</title>
+<link rel="stylesheet" href="style.css?v=20260624e"/>
+
+</head>
+<body>
+<div class="layout">
+
+  <!-- Header -->
+  <header class="header">
+    <svg class="tech-logo" viewBox="0 0 64 64" role="img" aria-label="BugBîner AI">
+      <title>BugBîner AI</title>
+      <defs>
+        <linearGradient id="tgGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#6f9bff"/><stop offset="1" stop-color="#9cdcfe"/>
+        </linearGradient>
+        <radialGradient id="tgSweep" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#9cdcfe" stop-opacity=".5"/><stop offset="1" stop-color="#9cdcfe" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <path d="M32 5 L55 18 L55 46 L32 59 L9 46 L9 18 Z" fill="#0c1430"
+            stroke="url(#tgGrad)" stroke-width="2.4" stroke-linejoin="round"/>
+      <g stroke="#3f6fff" fill="none" opacity=".45" stroke-width="1.2">
+        <circle cx="32" cy="32" r="20"/><circle cx="32" cy="32" r="13"/>
+        <line x1="32" y1="12" x2="32" y2="52"/><line x1="12" y1="32" x2="52" y2="32"/>
+      </g>
+      <g class="tg-sweep"><path d="M32 32 L32 12 A20 20 0 0 1 50.4 23 Z" fill="url(#tgSweep)"/></g>
+      <circle class="tg-ring" cx="32" cy="32" r="6" fill="none" stroke="#9cdcfe" stroke-width="1.4"/>
+      <circle class="tg-pulse" cx="32" cy="32" r="3.2" fill="url(#tgGrad)"/>
+    </svg>
+    <div class="brand">
+      <div class="brand-line">
+        <span class="logo">BugBîner AI</span>
+        <span class="subtitle">Gen AI-Powered Vulnerability Scanner</span>
+      </div>
+    </div>
+    <span class="brand-spacer"></span>
+    <span id="statusDot" class="status-dot" title="Disconnected"></span>
+    <span id="statusText" style="font-size:.72rem;color:var(--text2)">Idle</span>
+  </header>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <!-- ── 0. PROJECTS PANEL ── -->
+    <details class="advanced" id="projectsPanel">
+      <summary>
+        <span style="display:flex;align-items:center;gap:6px;width:100%">
+          <span style="color:var(--orange)">📁</span>
+          <span>Projects</span>
+          <span id="projCount" style="margin-left:auto;font-size:.6rem;color:var(--text3)"></span>
+        </span>
+      </summary>
+      <div class="advanced-body" style="padding:8px 12px 12px">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:4px">
+          <button onclick="loadProjects()" title="Refresh"
+            style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:.75rem;padding:0 4px;line-height:1">⟳ Refresh</button>
+        </div>
+        <div class="proj-list" id="projList">
+          <div class="proj-empty">Loading projects…</div>
+        </div>
+        <!-- Browse any folder on the computer -->
+        <button onclick="openFileBrowser()" style="width:100%;margin-top:6px;padding:6px;background:var(--bg3);border:1px dashed var(--border);color:var(--text2);border-radius:6px;cursor:pointer;font-size:.72rem;transition:all .15s"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+          📂 Browse Computer…
+        </button>
+        <!-- File browser for selected project -->
+        <div id="projFileBrowser" style="display:none">
+          <div class="proj-files" id="projFileList"></div>
+          <div class="proj-action-row">
+            <button class="proj-action-btn" onclick="projTaskAll()">🤖 AI Task</button>
+            <button class="proj-action-btn" onclick="projOpenFolder()">📂 Open Folder</button>
+            <button class="proj-action-btn" onclick="closeProjBrowser()">✕ Close</button>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- ── 1. TARGET CONFIG ── -->
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>Target</div>
+      <div class="input-group">
+        <span class="section-label">URL</span>
+        <input id="urlInput" type="url" placeholder="https://target.example.com/page?id=1"/>
+      </div>
+
+      <!-- Manual vulnerability selection -->
+      <div class="input-group" style="margin-top:6px">
+        <span class="section-label">Vulns</span>
+        <button type="button" onclick="toggleVulnPicker()" id="vulnPickerBtn"
+          style="width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:5px;cursor:pointer;font-size:.7rem;white-space:nowrap;transition:all .15s;text-align:left"
+          onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+          onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">🎯 Select Vulnerabilities <span id="vulnPickerCount">(All)</span></button>
+      </div>
+
+      <!-- Vuln picker panel (checkboxes injected by JS) -->
+      <div id="vulnPickerPanel" style="display:none;margin-top:6px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;font-size:.7rem;max-height:240px;overflow-y:auto"></div>
+
+      <div class="input-group" style="margin-top:6px;display:none">
+        <span class="section-label">Mode</span>
+        <select id="mode">
+          <option value="bugbounty">Bug Bounty (HackerOne)</option>
+          <option value="pentest">Pentest (Signed Contract)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ── 2. AI PROVIDER ── (hidden) -->
+    <div class="card" style="display:none">
+      <div class="card-title"><span class="dot purple"></span>AI Provider · Ollama (Local)</div>
+
+      <!-- Ollama (Local) -->
+      <div id="ollamaPanel" style="margin-bottom:10px;padding:10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="font-size:.8rem">🧠</span>
+          <span style="font-size:.75rem;font-weight:600">Ollama (Local)</span>
+          <span style="font-size:.65rem;color:var(--text3)" id="ollamaStatus">Disconnected</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:6px">
+          <input id="ollamaBase" type="text" placeholder="http://localhost:11434" 
+                 style="flex:1;padding:5px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:.7rem"
+                 oninput="_scheduleStateSave()"/>
+          <button onclick="testOllamaConnection()" 
+                  style="padding:5px 10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:4px;cursor:pointer;font-size:.68rem">
+            Test Connection
+          </button>
+        </div>
+        <div style="margin-top:6px;display:none">
+          <span style="font-size:.68rem;color:var(--text2)">Model:</span>
+          <select id="ollamaModel" onchange="_scheduleStateSave()"
+                  style="margin-left:6px;padding:3px 6px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:.68rem">
+            <option value="qwen2.5:7b">qwen2.5:7b (Local · scan + tools)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- hidden inputs kept for JS compatibility -->
+    <input id="scannerCookies" type="hidden" value=""/>
+    <!-- optional SECOND account (attacker B) cookies → enables real two-identity IDOR/BOLA -->
+    <input id="scannerCookiesB" type="hidden" value=""/>
+    <textarea id="customPayloads" style="display:none"></textarea>
+
+    <!-- ── PRIMARY ACTION ── -->
+    <button class="btn btn-exploit" id="btnExploit" onclick="startExploit()">🔍 Start Scan</button>
+    <div class="btn-row">
+      <button class="btn btn-pause" id="btnPause" onclick="togglePauseResume()" disabled>⏸ Pause</button>
+      <button class="btn btn-stop" id="btnStop" onclick="stopAll()" disabled>■ Stop</button>
+    </div>
+    <button class="btn btn-reset" id="btnReset" onclick="resetApp()" style="margin-top:6px">🔄 Reset</button>
+  </aside>
+
+  <!-- Main area -->
+  <!-- Main: Chat (top) + Terminal (bottom strip) -->
+  <!-- Terminal (center column) -->
+  <div class="main">
+    <div class="terminal-wrap">
+      <div class="terminal-bar">
+        <span style="color:var(--purple);font-weight:700">TERMINAL</span>
+        <span id="termCounter" style="margin-left:auto">0 events</span>
+        <button onclick="_openSiteMap()" class="sm-open-btn">&#x1F5FA; Site Map <span id="sitemapBadge" class="sm-open-badge">0</span></button>
+        <button onclick="_openVulnPanel()" class="sm-open-btn vuln-btn">&#x1F6A8; Vulns <span id="vulnBadge" class="sm-open-badge vuln-badge-dot">0</span></button>
+        <button onclick="clearTerminal()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:2px 8px;border-radius:4px;cursor:pointer;font-size:.7rem">CLEAR</button>
+      </div>
+      <div id="sseDebug" style="display:flex;padding:2px 14px;background:#050510;border-bottom:1px solid var(--border);font-size:.6rem;gap:8px;align-items:center;flex-wrap:wrap;color:var(--text3)">
+        <span>📡 SSE:</span>
+        <span id="sseTotal">0</span>
+        <span>|</span>
+        <span id="sseVuln">vuln:0</span>
+        <span id="sseCrawl" style="display:none">crawl:0</span>
+        <span id="sseScan" style="display:none">scan:0</span>
+      </div>
+      <div class="findings-bar" id="findingsBar" style="display:none;padding:4px 14px;background:#0d0d18;border-bottom:1px solid var(--border);font-size:.7rem;gap:12px;align-items:center;flex-wrap:wrap">
+        <span style="color:var(--text2);font-weight:600">🚨 FINDINGS</span>
+        <span id="fbTotal" style="color:var(--text);font-weight:700">0</span>
+        <span style="color:var(--text3)">|</span>
+        <span><span class="fb-sev critical">⬤</span> Critical: <span id="fbCritical" class="fb-num critical">0</span></span>
+        <span><span class="fb-sev high">⬤</span> High: <span id="fbHigh" class="fb-num high">0</span></span>
+        <span><span class="fb-sev medium">⬤</span> Medium: <span id="fbMedium" class="fb-num medium">0</span></span>
+        <span><span class="fb-sev low">⬤</span> Low: <span id="fbLow" class="fb-num low">0</span></span>
+        <span><span class="fb-sev info">⬤</span> Info: <span id="fbInfo" class="fb-num info">0</span></span>
+      </div>
+      <div class="terminal" id="terminal">
+        <div class="log info"><span class="ts">--:--:--</span><span class="tag">info</span><span class="msg">BugBîner AI ready. Enter a target URL and click EXPLOIT.</span></div>
+      </div>
+    </div>
+    <!-- Hidden stubs for JS compatibility -->
+    <div style="display:none" aria-hidden="true">
+      <span id="lscanBadge"></span><span id="roundsBadge"></span><span id="findingsBadge"></span>
+      <span id="lscanLiveInd"></span><span id="lscanTotal">0</span><span id="lscanScanning">0</span>
+      <span id="lscanDone">0</span><span id="lscanVulns">0</span><span id="lscanQueue">0</span><span id="lscanRps">0</span>
+      <table><tbody id="lscanBody"></tbody></table><div id="lscanEmpty"></div>
+      <table><tbody id="roundsBody"></tbody></table><div id="noResults"></div>
+      <div id="findingsContainer"></div>
+    </div>
+  </div>
+
+  <!-- AI Assistant (right column, full height) -->
+  <div id="chatPanel" class="chat-inline">
+
+    <!-- AI Scan Analysis -->
+    <div id="aiScanPanel" style="display:none;flex-direction:column;border-bottom:1px solid var(--border);padding:10px 14px 8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:.7rem;font-weight:700;color:var(--purple)">&#x1F9E0; AI Scan Analysis</span>
+        <button onclick="document.getElementById('aiScanPanel').style.display='none'" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:.8rem">&#x2715;</button>
+      </div>
+      <pre id="aiOutputPanel" style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:.68rem;font-family:var(--font-mono);color:var(--text2);max-height:200px;overflow-y:auto;white-space:pre-wrap;word-break:break-word;margin:0"></pre>
+    </div>
+
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-avatar">&#x2726;</div>
+        <span class="ai-assist-badge">&#x2726; AI Assistant</span>
+        <span class="chat-model-tag" id="chatModelTag" style="display:none">qwen2.5:7b ⚡</span>
+      </div>
+      <div class="chat-actions">
+        <button class="chat-new-btn" onclick="newChat()">&#xFF0B; New</button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-msgs" id="chatMsgs"></div>
+
+    <!-- Footer -->
+    <div class="chat-footer">
+      <div class="chat-img-preview" id="chatImgPreview"></div>
+      <div class="chat-input-wrap">
+        <textarea id="chatInput" placeholder="Ask anything…" onkeydown="chatKeydown(event)"></textarea>
+        <div class="chat-input-actions">
+          <div class="chat-input-left">
+            <button class="chat-mode-pill active-ask" id="modePillAsk" onclick="setMode('ask')">&#x1F4AC; Ask</button>
+            <button class="chat-mode-pill" id="modePillAgent" onclick="setMode('agent')">&#x26A1; Agent</button>
+            <button class="chat-attach-btn" onclick="document.getElementById('chatImgInput').click()" title="Attach images">&#x1F4CE;</button>
+            <input type="file" id="chatImgInput" accept="image/*" multiple style="display:none" onchange="onImageSelected(this)">
+          </div>
+          <span id="chatModelLabel" style="display:none">qwen2.5:7b ⚡</span>
+          <button class="chat-stop" id="chatStop" onclick="stopChatRun()">&#9632;</button>
+          <button class="chat-send" id="chatSend" onclick="sendChat()">&#x27A4;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ Site Map Overlay ══════════════════════════════════════════════════ -->
+<div id="smOverlay" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.7);backdrop-filter:blur(3px)" onclick="if(event.target===this)_closeSiteMap()">
+  <div style="position:absolute;left:310px;right:0;top:54px;bottom:0;background:#0c0c14;border-left:1px solid rgba(91,127,255,.2);display:flex;flex-direction:column;overflow:hidden">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0">
+      <span style="color:#8ba4ff;font-weight:700;font-size:.8rem">🗺 SITE MAP</span>
+      <span id="smOvTarget" style="font-size:.72rem;color:#555577;font-family:monospace;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      <span style="font-size:.7rem;color:#555577">Found: <b id="smOvFound" style="color:#8ba4ff">0</b></span>
+      <span style="font-size:.7rem;color:#555577">Queue: <b id="smOvQueue" style="color:#ffaa00">0</b></span>
+      <span style="font-size:.7rem;color:#555577">RPS: <b id="smOvRps" style="color:#00c878">0</b></span>
+      <input oninput="_filterSiteMap(this.value)" placeholder="Filter URLs…" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#c8cce0;padding:3px 8px;border-radius:5px;font-size:.72rem;width:160px">
+      <button onclick="_closeSiteMap()" style="background:none;border:none;color:#666;cursor:pointer;font-size:1rem;padding:0 4px">✕</button>
+    </div>
+    <!-- Body: tree + table -->
+    <div style="display:flex;flex:1;min-height:0;overflow:hidden">
+      <!-- Tree -->
+      <div id="smTree" style="width:260px;flex-shrink:0;overflow-y:auto;border-right:1px solid rgba(255,255,255,.05);padding:8px 0;font-size:.74rem;font-family:monospace"></div>
+      <!-- Table -->
+      <div style="flex:1;overflow:auto;min-width:0">
+        <table style="width:100%;border-collapse:collapse;font-size:.72rem">
+          <thead><tr style="position:sticky;top:0;background:#0c0c14;z-index:1;color:#555577">
+            <th style="padding:6px 8px;text-align:left;cursor:pointer" onclick="_sortSiteMap('host')">Host</th>
+            <th style="padding:6px 8px;cursor:pointer" onclick="_sortSiteMap('method')">Method</th>
+            <th style="padding:6px 8px;text-align:left;cursor:pointer">URL</th>
+            <th style="padding:6px 8px;cursor:pointer">Params</th>
+            <th style="padding:6px 8px;cursor:pointer" onclick="_sortSiteMap('status')">Status</th>
+            <th style="padding:6px 8px;cursor:pointer" onclick="_sortSiteMap('length')">Length</th>
+            <th style="padding:6px 8px;cursor:pointer" onclick="_sortSiteMap('mime')">MIME</th>
+            <th style="padding:6px 8px">Vulns</th>
+            <th style="padding:6px 8px">Time</th>
+          </tr></thead>
+          <tbody id="smBody"></tbody>
+        </table>
+        <div id="smEmpty" style="padding:30px;text-align:center;color:#333355;font-size:.8rem">No URLs yet — start a scan</div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div style="padding:6px 16px;border-top:1px solid rgba(255,255,255,.05);font-size:.68rem;color:#444466;flex-shrink:0">
+      <span id="smCount">0 items</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Vulnerabilities Overlay ═══════════════════════════════════════════ -->
+<div id="vulnOverlay" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.7);backdrop-filter:blur(3px)" onclick="if(event.target===this)_closeVulnPanel()">
+  <div style="position:absolute;right:0;top:0;bottom:0;width:560px;max-width:100vw;background:#0c0c14;border-left:1px solid rgba(255,34,68,.2);display:flex;flex-direction:column;overflow:hidden">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0">
+      <span style="color:#ff4466;font-weight:700;font-size:.85rem">🚨 VULNERABILITIES</span>
+      <span id="vulnOvCount" style="font-size:.72rem;color:#777799;flex:1"></span>
+      <!-- Filter buttons -->
+      <button class="vsf-btn vsf-all vsf-active" onclick="_vulnSetFilter('all')" style="padding:2px 8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#aaa;border-radius:4px;cursor:pointer;font-size:.66rem">All</button>
+      <button class="vsf-btn vsf-crit" onclick="_vulnSetFilter('critical')" style="padding:2px 8px;border:1px solid rgba(255,34,68,.3);background:rgba(255,34,68,.08);color:#ff4466;border-radius:4px;cursor:pointer;font-size:.66rem">Critical</button>
+      <button class="vsf-btn vsf-high" onclick="_vulnSetFilter('high')" style="padding:2px 8px;border:1px solid rgba(255,100,0,.3);background:rgba(255,100,0,.08);color:#ff6600;border-radius:4px;cursor:pointer;font-size:.66rem">High</button>
+      <button class="vsf-btn vsf-medi" onclick="_vulnSetFilter('medium')" style="padding:2px 8px;border:1px solid rgba(255,170,0,.3);background:rgba(255,170,0,.08);color:#ffaa00;border-radius:4px;cursor:pointer;font-size:.66rem">Medium</button>
+      <button class="vsf-btn vsf-low" onclick="_vulnSetFilter('low')" style="padding:2px 8px;border:1px solid rgba(68,136,255,.3);background:rgba(68,136,255,.08);color:#4488ff;border-radius:4px;cursor:pointer;font-size:.66rem">Low</button>
+      <button onclick="_closeVulnPanel()" style="background:none;border:none;color:#666;cursor:pointer;font-size:1rem;margin-left:6px;padding:0 4px">✕</button>
+    </div>
+    <!-- List -->
+    <div id="vulnPanelList" style="flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px">
+      <div id="vulnPanelEmpty" style="padding:40px;text-align:center;color:#333355;font-size:.8rem">No vulnerabilities found yet</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ File Browser Modal ════════════════════════════════════════════════ -->
+<div id="fbOverlay" style="display:none;position:fixed;inset:0;z-index:950;background:rgba(0,0,0,.75)" onclick="if(event.target===this)closeFileBrowser()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:560px;max-width:95vw;max-height:80vh;background:#0f0f1e;border:1px solid rgba(91,127,255,.25);border-radius:12px;display:flex;flex-direction:column;overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.07)">
+      <span style="font-weight:700;color:#8ba4ff">📂 Browse Folders</span>
+      <button onclick="closeFileBrowser()" style="background:none;border:none;color:#666;cursor:pointer;font-size:1.1rem">✕</button>
+    </div>
+    <div style="display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06)">
+      <button id="fbUpBtn" onclick="fbNavigateUp()" style="padding:3px 10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#aaa;border-radius:5px;cursor:pointer;font-size:.72rem">⬆ Up</button>
+      <input id="fbPathInput" placeholder="Type a path and press Enter…" onkeydown="if(event.key==='Enter')fbGoToPath(this.value)" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#c8cce0;padding:4px 8px;border-radius:5px;font-size:.72rem">
+      <button onclick="fbGoToPath(document.getElementById('fbPathInput').value)" style="padding:3px 10px;background:rgba(91,127,255,.15);border:1px solid rgba(91,127,255,.3);color:#8ba4ff;border-radius:5px;cursor:pointer;font-size:.72rem">Go</button>
+    </div>
+    <div id="fbDrives" style="display:none;flex-wrap:wrap;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.06)"></div>
+    <div id="fbList" style="flex:1;overflow-y:auto;padding:6px 12px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid rgba(255,255,255,.07)">
+      <span id="fbSelectedPath" style="font-size:.7rem;color:#555577;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1">No folder selected</span>
+      <button id="fbSelectBtn" onclick="fbSelectFolder()" disabled style="padding:4px 14px;background:rgba(91,127,255,.2);border:1px solid rgba(91,127,255,.4);color:#8ba4ff;border-radius:6px;cursor:pointer;font-size:.72rem;margin-left:10px">Select</button>
+    </div>
+  </div>
+</div>
+
+<div class="page-credit">by Joudi Janble</div>
+<script src="app.js?v=20260624e"></script>
+</body>
+</html>

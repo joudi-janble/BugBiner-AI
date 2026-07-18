@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+backend/node_modules/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Reports and generated artifacts
+reports/*
+*.log
+backend/scan_state.json
+backend/.cache/
+backend/.pytest_cache/
+
+# Local environment
+.env
+config.local.json

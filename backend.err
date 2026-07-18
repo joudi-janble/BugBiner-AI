@@ -1,0 +1,9 @@
+D:\BugBîner AI\backend\main.py:89: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+asyncio DEBUG Using proactor: IocpProactor
+root INFO Ollama qwen2.5:7b warmed up
