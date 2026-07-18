@@ -1,11 +1,11 @@
 @echo off
-title BugBiner AI - Gen AI-Powered Vulnerability Scanner
+title BugBîner AI - Gen AI-Powered Vulnerability Scanner
 cd /d %~dp0
 setlocal enabledelayedexpansion
 
 echo.
 echo  +===================================+
-echo  ^|       BugBiner AI  v1.0           ^|
+echo  ^|       BugBîner AI  v1.0           ^|
 echo  ^|   Gen AI-Powered Vuln Scanner      ^|
 echo  ^|   Built by Joudi Janble           ^|
 echo  +===================================+
