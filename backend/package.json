@@ -1,0 +1,8 @@
+{
+  "name": "exploitiq-crawler",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "puppeteer": "^25.1.0"
+  }
+}

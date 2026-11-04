@@ -1,0 +1,562 @@
+{
+  "version": "2026.11.04",
+  "last_updated": "2026-11-04",
+  "source": "BugBîner AI built-in catalog",
+  "entries": [
+    {
+      "id": "xss",
+      "label": "Cross-Site Scripting (XSS)",
+      "group": "Injection",
+      "severity": "high",
+      "engine": "deterministic",
+      "description": "Reflected/HTML-context script injection verified by unescaped reflection.",
+      "aliases": [
+        "cross site scripting",
+        "crosssitescripting",
+        "reflected xss",
+        "xss"
+      ]
+    },
+    {
+      "id": "sqli",
+      "label": "SQL Injection",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "deterministic",
+      "description": "Error/boolean/time-based SQL injection across query, body and JSON points.",
+      "aliases": [
+        "sql injection",
+        "sqlinjection",
+        "sql",
+        "blind sqli"
+      ]
+    },
+    {
+      "id": "nosql",
+      "label": "NoSQL Injection",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "deterministic",
+      "description": "Operator injection ($ne/$gt/$regex) against JSON/NoSQL APIs.",
+      "aliases": [
+        "nosql injection",
+        "nosqlinjection",
+        "mongodb injection"
+      ]
+    },
+    {
+      "id": "ssti",
+      "label": "Server-Side Template Injection (SSTI)",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "deterministic",
+      "description": "Template expression evaluation verified with unique arithmetic products.",
+      "aliases": [
+        "server side template injection",
+        "serversidetemplateinjection",
+        "template injection",
+        "ssti"
+      ]
+    },
+    {
+      "id": "cmdi",
+      "label": "OS Command Injection / RCE",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "deterministic",
+      "description": "Command separators detected via command output or a confirmed timing delay.",
+      "aliases": [
+        "command injection",
+        "commandinjection",
+        "os command injection",
+        "rce",
+        "cmdi"
+      ]
+    },
+    {
+      "id": "lfi",
+      "label": "LFI / Path Traversal",
+      "group": "Injection",
+      "severity": "high",
+      "engine": "deterministic",
+      "description": "Local file inclusion and directory traversal with multiple encodings.",
+      "aliases": [
+        "local file inclusion",
+        "localfileinclusion",
+        "path traversal",
+        "pathtraversal",
+        "directory traversal",
+        "lfi"
+      ]
+    },
+    {
+      "id": "xxe",
+      "label": "XML External Entity (XXE)",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "deterministic",
+      "description": "In-band/OOB external entity expansion against XML endpoints.",
+      "aliases": [
+        "xml external entity",
+        "xmlexternalentity",
+        "xxe"
+      ]
+    },
+    {
+      "id": "ldapi",
+      "label": "LDAP Injection",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "detect_extras",
+      "description": "LDAP filter injection in authentication/search parameters.",
+      "aliases": [
+        "ldap injection",
+        "ldapinjection",
+        "ldap",
+        "ldapi"
+      ]
+    },
+    {
+      "id": "xpathi",
+      "label": "XPath Injection",
+      "group": "Injection",
+      "severity": "high",
+      "engine": "detect_extras",
+      "description": "XPath query injection with error/boolean differential checks.",
+      "aliases": [
+        "xpath injection",
+        "xpathinjection",
+        "xpath",
+        "xpathi"
+      ]
+    },
+    {
+      "id": "crlf",
+      "label": "CRLF / Header Injection",
+      "group": "Injection",
+      "severity": "high",
+      "engine": "deterministic",
+      "description": "Carriage-return/line-feed injection into response headers or logs.",
+      "aliases": [
+        "crlf injection",
+        "crlfinjection",
+        "header injection",
+        "response splitting",
+        "crlf"
+      ]
+    },
+    {
+      "id": "hpp",
+      "label": "HTTP Parameter Pollution",
+      "group": "Injection",
+      "severity": "medium",
+      "engine": "detect_extras",
+      "description": "Duplicate parameters that change server-side interpretation.",
+      "aliases": [
+        "parameter pollution",
+        "httpparameterpollution",
+        "hpp"
+      ]
+    },
+    {
+      "id": "deserialization",
+      "label": "Insecure Deserialization",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "detect_extras",
+      "description": "Unsafe object deserialization indicators (Java/PHP/Python/.NET).",
+      "aliases": [
+        "insecure deserialization",
+        "insecuredeserialization",
+        "deserialization"
+      ]
+    },
+    {
+      "id": "type_juggling",
+      "label": "Type Juggling",
+      "group": "Injection",
+      "severity": "critical",
+      "engine": "detect_extras",
+      "description": "Loose type comparison bypass in authentication/authorization.",
+      "aliases": [
+        "type juggling",
+        "typejuggling",
+        "type_juggling"
+      ]
+    },
+    {
+      "id": "ssrf",
+      "label": "Server-Side Request Forgery (SSRF)",
+      "group": "Server-Side",
+      "severity": "critical",
+      "engine": "deterministic",
+      "description": "Internal/cloud-metadata fetch and blind OAST callback verification.",
+      "aliases": [
+        "server side request forgery",
+        "serversiderequestforgery",
+        "ssrf"
+      ]
+    },
+    {
+      "id": "open_redirect",
+      "label": "Open Redirect",
+      "group": "Server-Side",
+      "severity": "medium",
+      "engine": "deterministic",
+      "description": "Location header points to an external attacker-controlled domain.",
+      "aliases": [
+        "open redirect",
+        "openredirect",
+        "redirect",
+        "url redirect"
+      ]
+    },
+    {
+      "id": "host_header",
+      "label": "Host Header Injection",
+      "group": "Server-Side",
+      "severity": "high",
+      "engine": "detect_extras",
+      "description": "Untrusted Host/X-Forwarded-Host reflected into links or redirects.",
+      "aliases": [
+        "host header injection",
+        "hostheaderinjection",
+        "host header",
+        "host-header"
+      ]
+    },
+    {
+      "id": "cache_poison",
+      "label": "Web Cache Poisoning",
+      "group": "Server-Side",
+      "severity": "high",
+      "engine": "detect_extras",
+      "description": "Unkeyed header/parameter poisoning of shared caches.",
+      "aliases": [
+        "web cache poisoning",
+        "cache poisoning",
+        "cachepoisoning",
+        "cache poison",
+        "cache-poison"
+      ]
+    },
+    {
+      "id": "request_smuggling",
+      "label": "HTTP Request Smuggling",
+      "group": "Advanced",
+      "severity": "critical",
+      "engine": "turbo",
+      "description": "CL.TE / TE.CL desynchronization between front-end and back-end.",
+      "aliases": [
+        "request smuggling",
+        "httpsmuggling",
+        "smuggling",
+        "request-smuggling"
+      ]
+    },
+    {
+      "id": "prototype_pollution",
+      "label": "Prototype Pollution",
+      "group": "Advanced",
+      "severity": "high",
+      "engine": "turbo",
+      "description": "Client/server-side prototype pollution through recursive merges.",
+      "aliases": [
+        "prototype pollution",
+        "prototypepollution",
+        "prototype-pollution"
+      ]
+    },
+    {
+      "id": "file_upload",
+      "label": "File Upload Bypass",
+      "group": "Advanced",
+      "severity": "critical",
+      "engine": "detect_extras",
+      "description": "Extension/MIME/content-type bypass leading to executable uploads.",
+      "aliases": [
+        "file upload",
+        "fileupload",
+        "unrestricted file upload",
+        "file-upload"
+      ]
+    },
+    {
+      "id": "websocket",
+      "label": "WebSocket Security",
+      "group": "Advanced",
+      "severity": "high",
+      "engine": "turbo",
+      "description": "Unauthenticated WebSocket access and message injection/XSS.",
+      "aliases": [
+        "websocket",
+        "ws security",
+        "websocket security"
+      ]
+    },
+    {
+      "id": "dom_xss",
+      "label": "DOM-based XSS",
+      "group": "Client-Side",
+      "severity": "high",
+      "engine": "browser",
+      "description": "Source→sink execution confirmed in a real headless browser.",
+      "aliases": [
+        "dom xss",
+        "domxss",
+        "dom-based xss",
+        "dom_xss"
+      ]
+    },
+    {
+      "id": "csrf",
+      "label": "Cross-Site Request Forgery (CSRF)",
+      "group": "Client-Side",
+      "severity": "high",
+      "engine": "deterministic",
+      "description": "State-changing forms without anti-CSRF tokens or Origin checks.",
+      "aliases": [
+        "cross site request forgery",
+        "crosssiterequestforgery",
+        "csrf"
+      ]
+    },
+    {
+      "id": "clickjacking",
+      "label": "Clickjacking",
+      "group": "Client-Side",
+      "severity": "medium",
+      "engine": "detect_extras",
+      "description": "Missing X-Frame-Options / CSP frame-ancestors on sensitive pages.",
+      "aliases": [
+        "clickjacking",
+        "click jacking",
+        "ui redress"
+      ]
+    },
+    {
+      "id": "cors",
+      "label": "CORS Misconfiguration",
+      "group": "Client-Side",
+      "severity": "high",
+      "engine": "deterministic",
+      "description": "ACAO reflects an untrusted Origin, optionally with credentials.",
+      "aliases": [
+        "cors misconfiguration",
+        "corsmisconfiguration",
+        "cors"
+      ]
+    },
+    {
+      "id": "idor",
+      "label": "IDOR / BOLA",
+      "group": "Access Control",
+      "severity": "high",
+      "engine": "deterministic",
+      "description": "Object-level authorization bypass confirmed with a second identity.",
+      "aliases": [
+        "insecure direct object reference",
+        "insecuredirectobjectreference",
+        "broken object level authorization",
+        "bola",
+        "idor"
+      ]
+    },
+    {
+      "id": "access_control",
+      "label": "Broken Access Control",
+      "group": "Access Control",
+      "severity": "high",
+      "engine": "detect_pro",
+      "description": "403 bypass, forced browsing and missing function-level authorization.",
+      "aliases": [
+        "broken access control",
+        "access control",
+        "authorization bypass",
+        "access-control"
+      ]
+    },
+    {
+      "id": "jwt",
+      "label": "JWT Weaknesses",
+      "group": "Access Control",
+      "severity": "high",
+      "engine": "detect_pro",
+      "description": "alg:none, alg confusion, weak secrets and missing expiry.",
+      "aliases": [
+        "jwt",
+        "json web token",
+        "jwt weaknesses",
+        "jwt vulnerability"
+      ]
+    },
+    {
+      "id": "graphql",
+      "label": "GraphQL Security",
+      "group": "API",
+      "severity": "high",
+      "engine": "detect_pro",
+      "description": "Introspection enabled, unbounded depth/complexity, batching abuse.",
+      "aliases": [
+        "graphql",
+        "graphql security",
+        "graphql introspection"
+      ]
+    },
+    {
+      "id": "mass_assignment",
+      "label": "Mass Assignment (BOPLA)",
+      "group": "API",
+      "severity": "high",
+      "engine": "detect_pro",
+      "description": "Privileged properties accepted from client-controlled JSON bodies.",
+      "aliases": [
+        "mass assignment",
+        "massassignment",
+        "bopla",
+        "mass-assignment"
+      ]
+    },
+    {
+      "id": "rate_limit",
+      "label": "Missing Rate Limit / Brute Force",
+      "group": "API",
+      "severity": "medium",
+      "engine": "detect_pro",
+      "description": "Login/OTP/reset endpoints allow unlimited attempts.",
+      "aliases": [
+        "missing rate limit",
+        "rate limiting",
+        "ratelimit",
+        "brute force",
+        "rate-limit"
+      ]
+    },
+    {
+      "id": "info_disclosure",
+      "label": "Information Disclosure",
+      "group": "Configuration",
+      "severity": "medium",
+      "engine": "detect_pro",
+      "description": "Exposed .git/.env/backup/config files and verbose errors.",
+      "aliases": [
+        "information disclosure",
+        "infodisclosure",
+        "info disclosure",
+        "info-disclosure"
+      ]
+    },
+    {
+      "id": "secret_exposure",
+      "label": "Secret / API-key Exposure",
+      "group": "Configuration",
+      "severity": "high",
+      "engine": "detect_pro",
+      "description": "Live credentials, tokens and private keys in client-served assets.",
+      "aliases": [
+        "secret exposure",
+        "secretexposure",
+        "api key exposure",
+        "secret-exposure"
+      ]
+    },
+    {
+      "id": "subdomain_takeover",
+      "label": "Subdomain Takeover",
+      "group": "Configuration",
+      "severity": "high",
+      "engine": "detect_pro",
+      "description": "Dangling DNS records pointing to unclaimed third-party resources.",
+      "aliases": [
+        "subdomain takeover",
+        "subdomaintakeover",
+        "subdomain-takeover"
+      ]
+    },
+    {
+      "id": "security_headers",
+      "label": "Missing Security Headers",
+      "group": "Configuration",
+      "severity": "low",
+      "engine": "detect_pro",
+      "description": "Missing CSP/HSTS/X-Content-Type-Options/Referrer-Policy.",
+      "aliases": [
+        "security headers",
+        "missing security headers",
+        "securityheaders",
+        "security-headers"
+      ]
+    },
+    {
+      "id": "tls",
+      "label": "Weak TLS / HSTS",
+      "group": "Configuration",
+      "severity": "medium",
+      "engine": "detect_pro",
+      "description": "Legacy TLS versions, weak ciphers or missing HSTS.",
+      "aliases": [
+        "weak tls",
+        "tls",
+        "hsts",
+        "ssl issues",
+        "tls crypto"
+      ]
+    },
+    {
+      "id": "race_condition",
+      "label": "Race Condition",
+      "group": "Business Logic",
+      "severity": "high",
+      "engine": "turbo",
+      "description": "Concurrent requests produce duplicate/unauthorized state transitions.",
+      "aliases": [
+        "race condition",
+        "racecondition",
+        "toctou",
+        "race-condition"
+      ]
+    },
+    {
+      "id": "business_logic",
+      "label": "Business Logic Flaws",
+      "group": "Business Logic",
+      "severity": "high",
+      "engine": "ai",
+      "description": "Price/quantity tampering, workflow bypass and privilege escalation.",
+      "aliases": [
+        "business logic",
+        "businesslogic",
+        "logic flaw",
+        "business-logic"
+      ]
+    },
+    {
+      "id": "prompt_injection",
+      "label": "AI / LLM Prompt Injection",
+      "group": "Modern AI",
+      "severity": "high",
+      "engine": "ai",
+      "description": "Untrusted input overrides LLM instructions or leaks system prompts. Tested by the AI agent.",
+      "aliases": [
+        "prompt injection",
+        "promptinjection",
+        "llm injection",
+        "ai injection",
+        "prompt-injection"
+      ]
+    },
+    {
+      "id": "sspp",
+      "label": "Server-Side Prototype Pollution",
+      "group": "Modern AI",
+      "severity": "critical",
+      "engine": "ai",
+      "description": "Prototype chain pollution on the server leading to RCE/DoS. Tested by the AI agent.",
+      "aliases": [
+        "server side prototype pollution",
+        "sspp",
+        "sspp"
+      ]
+    }
+  ]
+}
