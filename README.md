@@ -1,170 +1,124 @@
-# BugBîner AI — Gen AI-Powered Vulnerability Scanner v1
+# BugBiner AI
 
-<p align="center">
-  <b>ماسح ثغرات أمنية مدعوم بالذكاء الاصطناعي التوليدي</b><br>
-  <sub>Built by Joudi Janble</sub>
-</p>
+A web crawling and security testing platform with a live interface for monitoring scans and reviewing results with optional AI-assisted analysis. The project is under active development; results may vary depending on the target, its accessibility, configuration, and application type.
 
----
+> **Legal notice:** Use this tool only on systems you own or have explicit permission to test. Active scans send test requests to the target and may affect its performance or data. Start with a limited scope, obtain the system owner's approval, and do not use sensitive production data.
 
-## نبذة عن البرنامج
+## Overview
 
-**BugBîner AI** هو ماسح ثغرات أمنية عصري يدمج بين تقنيات الفحص  والذكاء الاصطناعي التوليدي المحلي. يكتشف البرنامج أكثر من **60 نوعاً** من الثغرات الأمنية تلقائياً ويقدم تحليل ذكي لكل ثغرة مع تقييم مدى استغلالها.
-ومازال قيد تطوير 
+The project consists of:
 
-### روابط مفيدة
-- فيديو شرح: https://www.youtube.com/watch?v=exnomF4Ccn4
-- فيسبوك: https://www.facebook.com/joudijanble
+- **Python and FastAPI server** for managing scans and settings and serving the interface.
+- **Node.js and Puppeteer crawler** for opening website pages and discovering links and input points.
+- **Web interface** for monitoring crawling, results, and a live site map.
+- **Scanning engines** for testing different types of web security issues, with optional AI-assisted analysis.
+- **`reports/` directory** for storing HTML reports and scan result data.
 
-### المميزات الرئيسية
+## Features
 
-| الميزة | الوصف |
+- Interactive website crawling to collect reachable pages and input points.
+- Scan scope selection: current host, domain with subdomains, or specified subdomains.
+- Select vulnerability types from the interface catalog instead of necessarily running every type.
+- Live scan events and findings, with a site map and asset dashboard.
+- Pause and resume a scan, or stop it, with progress state saved for continuation.
+- Review finding details and request AI analysis or PoC generation when the feature and required connection are available.
+- Configure and test AI providers and models from **AI Settings**, and manage Ollama models.
+- Browser-based DOM/XSS checks and selected advanced modules, subject to their requirements and dependencies.
+- Generate HTML reports and save scan results locally in `reports/`.
+- Browse project files and manage local files through the interface.
+
+### Vulnerability check catalog
+
+The bundled catalog currently contains **40 check types**. This is the number of types registered in the catalog; it does not guarantee that each type will be tested or detected on every website. Testing depends on the target, discovered pages and input points, configuration, and available modules and dependencies.
+
+| Category | Examples |
 |---|---|
-| **زحف تلقائي (Burp-style Spider)** | زاحف Node.js + Puppeteer يكتشف جميع صفحات الموقع تلقائياً |
-| **60+ كاشف ثغرات** | XSS, SQLi, SSRF, SSTI, IDOR, XXE, LFI, CSRF, RCE, Open Redirect, Path Traversal والمزيد |
-| **تحليل ذكي بالـ AI** | كل ثغرة تُحلل بالذكاء الاصطناعي لتحديد ما إذا كانت حقيقية أو إيجابي كاذب |
-| **استغلال تجريبي (PoC)** | توليد تلقائي لـ Proof of Concept لكل ثغرة مكتشفة |
-| **اختبار خارج النطاق (OAST)** | اختبار SSRF العمياء والثغرات العمياء عبر interactsh |
-| **DOM XSS Detection** | فحص XSS في تطبيques Single Page عبر Playwright + Chromium |
-| **تقارير HTML احترافية** | تقارير مفصلة تشبه Burp Suite مع تصنيف حسب الخطورة |
-| **استئناف الفحص (Resume)** | إمكانية إيقاف مؤقت واستئناف الفحص من حيث توقف |
-| **واجهة عصرية** | واجهة سوداء بأسلوب Cyberpunk مع لوحة متابعة حية |
-| **ذكاء اصطناعي محلي بالكامل** يعمل بدون انترنت مجاني بالكامل
+| Injection | XSS, SQL Injection, NoSQL Injection, SSTI, Command Injection, LFI/Path Traversal, XXE, LDAP and XPath Injection |
+| Requests, headers, and caching | SSRF, Open Redirect, Host Header Injection, CRLF, HTTP Parameter Pollution, Web Cache Poisoning, HTTP Request Smuggling |
+| Browser and client-side | DOM XSS, CSRF, Clickjacking, CORS, WebSocket, File Upload, Prototype Pollution |
+| Access control and identity | IDOR/BOLA, Broken Access Control, JWT, GraphQL, Mass Assignment, Rate Limiting |
+| Configuration, information, and business logic | Information and secret exposure, Subdomain Takeover, Security Headers, TLS/HSTS, Race Conditions, Business Logic, and LLM risks |
 
----
+The application displays the current list and version from `backend/vuln_catalog.json`. The checks do not all use the same verification method, and some may not be applicable to a given target.
 
-## الأنواع المكتشفة من الثغرات
+## AI and privacy
 
-### فئة 1 — فحص نشط (Active Scan)
-| الثغرة | الوصف |
-|---|---|
-| **XSS** | Cross-Site Scripting — Reflected, Stored, DOM-based |
-| **SQLi** | SQL Injection — Error-based, Blind, Time-based |
-| **SSTI** | Server-Side Template Injection — Jinja2, Twig, Freemarker |
-| **SSRF** | Server-Side Request Forgery — مع اختبار Cloud Metadata |
-| **XXE** | XML External Entity Injection |
-| **LFI / Path Traversal** | Local File Inclusion وتجاوز المسارات |
-| **RCE** | Remote Code Execution — Command Injection |
-| **CRLF Injection** | تسميم Headers عبر CRLF |
-| **Header Injection** | حقن Headers عشوائية |
+The application supports multiple providers, including:
 
-### فئة 2 — فحص تفاعلي (Pro Active)
-| الثغرة | الوصف |
-|---|---|
-| **IDOR / BOLA** | Insecure Direct Object Reference — فحص بحسابين مختلفين |
-| **CSRF** | Cross-Site Request Forgery — على Forms الحالة المعدلة |
-| **Open Redirect** | إعادة توجيه مفتوحة مع اختبار evil.com |
-| **JWT Attacks** | اختبار توقيعات JSON Web Token |
-| **GraphQL** | اختبار GraphQL endpoints |
-| **NoSQL Injection** | حقن قواعد بيانات NoSQL |
-| **Clickjacking** | اختبار X-Frame-Options |
-| **Mass Assignment** | اختبار تعديل الحقول المخفية (BOPLA) |
-| **Subdomain Takeover** | اختبار الاستحواذ على النطاقات الفرعية |
-| **Secret Exposure** | كشف API Keys, Tokens, Passwords المكشوفة |
+- **Ollama** for running a local model.
+- **OpenAI-compatible APIs**, as well as Anthropic, Google Gemini, and Z.AI.
 
-### فئة 3 — فحص مخصص (Burp-class Turbo)
-| الثغرة | الوصف |
-|---|---|
-| **HTTP Smuggling** | تهريب HTTP Requests |
-| **DNS Rebinding** | إعادة ربط DNS |
-| **Race Conditions** | سباق الحالتين |
-| **Prototype Pollution** | تلوث النماذج في JavaScript |
-| **WebSocket** | اختبار WebSocket endpoints |
-| **DOM XSS Static** | تحليل ثابت لـ DOM XSS |
-| **Cache Poisoning** | تسميم الكاش |
-| **File Upload Bypass** | تجاوز رفع الملفات |
+Choosing a cloud provider sends requests or the context needed for analysis to that provider, subject to its configuration and privacy policy. Do not assume the application operates entirely locally when a cloud service is selected. Do not put API keys in a public repository; `config.json` contains local settings and is excluded from Git.
 
----
+The server does not automatically download or load a model at startup. Choose a provider and model in **AI Settings**, and configure the model or API key before using AI analysis features.
 
-## المتطلبات
+## Requirements
 
-| المكون | الإصدار |
-|---|---|
-| **Windows** | 10/11 |
-| **Python** | 3.12+ |
-| **Node.js** | LTS |
+- Windows 10 or 11.
+- Python 3.12 or later.
+- Node.js LTS and npm.
+- Ollama if you want to run a local model. `start.bat` also checks for and starts Ollama.
+- An internet connection when installing dependencies, using a cloud AI provider, or using external features such as OAST.
 
----
+## Installation and startup on Windows
 
-## طريقة التشغيل windows 
+### Quick start
 
-### الطريقة السريعة (موصى بها)
+1. Download and extract the project.
+2. Run `start.bat`.
+3. If needed, the script attempts to install Python, Node.js, or Ollama using `winget`, then creates a virtual environment and installs the Python and Puppeteer dependencies.
+4. Once dependencies are ready, the server starts on port `9090` and opens the browser.
 
-```bash
-# 1. قم بتنزيل الأداة بصيغة zip
-cd bugbiner-ai
+Installation may require permission to install software and an internet connection. If `winget` is unavailable or automatic installation fails, install the requirements manually and run the script again.
 
-# 2. فقط شغل start.bet سوف يقوم بتحقق  من المتطلبات المطلوبة وتنزلها تلقائي 
-start.bat
+### Starting after setup
+
+You can use `start.ps1` to launch the server and open the interface after the virtual environment has already been prepared:
+
+```powershell
+.\start.ps1
 ```
 
-**المُشغّل `start.bat` يقوم بالتالي تلقائياً:**
+Once the server is running, open:
 
-```
-1. يتحقق من Python ويُثبّته إذا لم يكن موجوداً
-2. ينشئ بيئة افتراضية (venv) ويُثبّت المكتبات
-3. يتحقق من Node.js ويُثبّته + Puppeteer إذا لم يكونا موجودين
-4. يضبط إعدادات التشغيل المتوازي
-5. يشغّل الخادوم على المنفذ 9090
-6. يفتح المتصفح تلقائياً
-```
+<http://localhost:9090>
 
-### فتح الواجهة
+## How to use
 
-```
-http://localhost:9090
-```
+1. Open **AI Settings** and select an AI provider and model if you want AI-assisted features.
+2. Enter the URL of a website you are authorized to test.
+3. Choose the scan scope and check types. Use the smallest appropriate scope.
+4. Click **Start Scan** to monitor crawling and scanning in the interface.
+5. Review pages, findings, and evidence manually; a tool result is not definitive proof of a vulnerability.
+6. Request analysis or a PoC when needed, then review the HTML report and scan results in `reports/`.
+7. Use **Pause/Resume** to pause or continue, or **Stop** to end the scan.
 
----
+## Important files and directories
 
-## كيفية استخدامه
+| Path | Purpose |
+|---|---|
+| `backend/main.py` | FastAPI server and application endpoints |
+| `backend/crawler.js` | Puppeteer crawler |
+| `backend/detect_engine.py` and other scan modules | Detection logic and supporting modules |
+| `backend/vuln_catalog.json` | Vulnerability check catalog |
+| `frontend/` | Web interface files |
+| `config.json` | Local AI settings; do not share if it contains an API key |
+| `reports/` | HTML reports and scan result data |
+| `tools/` | Optional tools, including the Interactsh client for OAST features |
 
-### 1. بدء الفحص
-- أدخل رابط الموقع المستهدف في حقل **Target URL**
-- اختر أنواع الثغرات المطلوبة من قائمة **Select Vulnerabilities**
-- اضغط **Start Scan**
+## Limitations and notes
 
-### 2. متابعة النتائج حياً
-- **Terminal**: يعرض أحداث الزحف والفحص لحظياً
-- **Live Dashboard**: يعرض كل صفحة تم اكتشافها وحالة فحصها
-- **Site Map**: خريطة شجرية للموقع مثل Burp Suite
-- **AI Panel**: يعرض تحليل الذكاء الاصطناعي للتقنيات المكتشفة
+- The project is under development; some checks may be experimental or unsuitable for certain applications.
+- A check listed in the catalog does not guarantee that the engine can run a valid test for it in every case.
+- Active scans and OAST features may contact the target or external services. Use them only with authorization and configure the scope carefully.
+- AI is an analysis aid, not a replacement for manual verification or qualified security review.
+- Do not enter real credentials or sensitive information into requests or project files without understanding where it is stored and which services may receive it.
 
-### 3. عرض الثغرات
-- **Findings Bar**: شريط علوي يعرض عدد الثغرات حسب الخطورة
-- **Vuln Panel**: لوحة مفصلة لكل ثغرة مع البرهان والاستغلال والتوصيات
-- **Vuln Details**: AI Verdict + Exploitability + Attack Scenario + Fix
+## Links
 
-### 4. التقارير
-- اضغط **Generate Report** لإنشاء تقرير HTML مفصل
-- التقارير تُحفظ في مجلد `reports/`
+- Demo video: <https://www.youtube.com/watch?v=exnomF4Ccn4>
+- Repository: <https://github.com/joudi-janble/BugBiner-AI>
 
-### 5. إيقاف واستئناف
-- **Pause**: إيقاف مؤقت — يُحفظ كل شيء
-- **Resume**: استئناف من حيث توقف (يُعاد تحميل الصفحة بشكل شفاف)
-- **Stop**: إيقاف نهائي مع حفظ التقدم
+## License
 
----
-
-## ملاحظات تقنية
-
-- **يعمل بالكامل محلياً** — لا يحتاج إنترنت بعد تحميل النموذج
-- **بياناتك آمنة** — لا يتم إرسال أي بيانات لأي خادوم خارجي
-- **Fingerprinting ذكي** — يكتشف تقنيات الموقع قبل بدء الفحص لتخصيص الكاشفات
-- **Adaptive Baseline** — يقارن الاستجابة العادية مع استجابة الحمولة لكل URL
-- **Differential Confirmation** — يؤكد الثغرة بمقارنة النتيجة مع التحكم والخط الأساسي
-- **False Positive Suppression** — فلترة تلقائية للإيجابيات الكاذبة المعروفة
-- **Deduplication** — لا يكرر نفس الثغرة مرتين
-
----
-
-## الترخيص
-
-هذا المشروع للاستخدام التعليمي والأبحاث الأمنية فقط. استخدامه على مواقع بدون إذن مخالف للقانون.
-
----
-
-<p align="center">
-  <b>BugBiner AI</b> — Vulnerability Scanner Powered by Generative AI<br>
-  <sub>Built with FastAPI, Node.js, Puppeteer, Playwright</sub>
-</p>
+Review the license files included with the project and any external tools in the `tools/` directory. Use of the project must comply with applicable laws and license terms.
